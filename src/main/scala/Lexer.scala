@@ -3,15 +3,12 @@ import scala.collection.mutable.HashMap
 
 case class Lexer (spec: String) {
 
-  /*
-    This is the main function of the lexer, it splits the given word into a list of lexems
-    in the format (LEXEM, TOKEN)
-  */
-
+  // Function that returns the sink state of our DFA
   def getSinkState(dfa: Dfa[Int]): Int = {
     return dfa.K.toList.sorted.last;
   }
 
+  // Getter for the specifications mapping
   def getSpecMapping(): mutable.LinkedHashMap[String, String] = {
     var mapping = mutable.LinkedHashMap.empty[String, String];
     var rows = spec.replaceAll("\r\n","\n").split("\n").map(row => row.stripSuffix(";"));
@@ -25,19 +22,19 @@ case class Lexer (spec: String) {
     }
     return  mapping;
   }
+
+  // Getter for the DFA mapping
   def getDFAMapping(specMapping: mutable.LinkedHashMap[String, String]): mutable.LinkedHashMap[String, Dfa[Int]] = {
     var mapping = mutable.LinkedHashMap.empty[String, Dfa[Int]];
     for (key <- specMapping.keySet){
       var regex = specMapping(key);
-      /*if(key.equals("BEGIN")){
-        println(Regex.toPrenex(regex));
-      }*/
       var dfa = Dfa.fromPrenex(Regex.toPrenex(regex));
       mapping.put(key, dfa);
     }
     return mapping;
   }
 
+  // Getter for the NFA mapping
   def getNFAMapping(specMapping: HashMap[String, String]): HashMap[String, Nfa[Int]] = {
     var mapping = HashMap.empty[String, Nfa[Int]];
     for (key <- specMapping.keySet) {
@@ -49,6 +46,8 @@ case class Lexer (spec: String) {
     }
     return mapping;
   }
+
+  // Function that gets the longest matching prefix of our word
   // -1 = ok, -2 = invalid char -3 = not finished
   def getLongestMatchingPrefix(dfa: Dfa[Int], word: String, state: Int, longestMatch: String, currentMatch: String, characterNo: Int): (String, Int, Int) = {
     if(state < 0) {
@@ -94,12 +93,11 @@ case class Lexer (spec: String) {
       }
     }
   }
+
+  // Driver function that tokenizes the given text
   def lex(word: String): Either[String,List[(String,String)]] = {
-    var result = Left("pula");
     var specMapping = getSpecMapping();
-    //println(specMapping);
     var dfaMapping = getDFAMapping(specMapping);
-    //println(dfaMapping);
 
     var chars = 0;
     var varWord = new String(word);
@@ -112,7 +110,6 @@ case class Lexer (spec: String) {
       var currchars: Int = -1;
       for(key <- dfaMapping.keySet){
         var currLong = getLongestMatchingPrefix(dfaMapping(key), varWord, dfaMapping(key).q0, "", "", chars);
-        //println("Regex = " + key + " Longest matching prefix = " + currLong);
         if(currLong._3 == -3){
           hasFoundWord = true;
         }

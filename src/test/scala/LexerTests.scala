@@ -2,7 +2,7 @@ import scala.Console.in
 
 class LexerTests extends munit.FunSuite{
 
-  test("Test lexer: simple concat (2p)"){
+  test("Test lexer: simple concat"){
     val spec =
       """A: a;
         #BC: bc;
@@ -15,7 +15,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("abcdefdefbca") == Right(List(("a", "A"), ("bc", "BC"), ("def", "DEF"), ("def", "DEF"), ("bc", "BC"), ("a", "A"))))
   }
 
-  test("Test lexer: simple union (2p)"){
+  test("Test lexer: simple union"){
     val spec =
       """AorB: a|b;
         #DorE: d|e;
@@ -27,7 +27,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("adbeb") == Right(List(("a", "AorB"), ("d", "DorE"), ("b", "AorB"), ("e", "DorE"), ("b", "AorB"))))
   }
 
-  test("Test lexer: space and zeros char (5p)"){
+  test("Test lexer: space and zeros char"){
     val spec =
       """smallA: a;
         #bigA: aaaa;
@@ -42,7 +42,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("aaaaaaaaaaaa") == Right(List(("aaaa", "bigA"), ("aaaa", "bigA"), ("aaaa", "bigA"))))
   }
 
-  test("Test lexer: space and zeros char (5p)"){
+  test("Test lexer: space and zeros char"){
     val spec =
       """SPACE: ' ';
         #ZEROS: 0+;
@@ -54,7 +54,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("0 00 000 0000 000 000 00 0 ") == Right(List(("0", "ZEROS"), (" ", "SPACE"), ("00", "ZEROS"), (" ", "SPACE"), ("000", "ZEROS"), (" ", "SPACE"), ("0000", "ZEROS"), (" ", "SPACE"), ("000", "ZEROS"), (" ", "SPACE"), ("000", "ZEROS"), (" ", "SPACE"), ("00", "ZEROS"), (" ", "SPACE"), ("0", "ZEROS"), (" ", "SPACE"))))
   }
 
-  test("Test lexer: ones and twos char (8p)"){
+  test("Test lexer: ones and twos char"){
     val spec =
       """TWO: 2;
         #PATTERN: 11*(00)*101(0|1)(0|1)*;
@@ -68,7 +68,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("2100101121101112110101012100001011211011110111101") == Right(List(("2", "TWO"), ("1001011", "PATTERN"), ("2", "TWO"), ("110111", "PATTERN"), ("2", "TWO"), ("11010101", "PATTERN"), ("2", "TWO"), ("100001011", "PATTERN"), ("2", "TWO"), ("11011110111101", "PATTERN"))))
   }
 
-  test("Test lexer: plus and star char (8p)"){
+  test("Test lexer: plus and star char"){
     val spec =
       """C: c;
         #ABS: (ab)+;
@@ -85,7 +85,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("cbbbabcabbabcbbcababab") == Right(List(("c", "C"), ("bbb", "BS"), ("ab", "ABS"), ("c", "C"), ("ab", "ABS"), ("b", "BS"), ("ab", "ABS"), ("c", "C"), ("bb", "BS"), ("c", "C"), ("ababab", "ABS"))))
   }
 
-  test("Test lexer: whitespaces char (10p)"){
+  test("Test lexer: whitespaces char"){
     val spec =
       """SPACE: ' ';
         #NEWLINE: '\n';
@@ -107,7 +107,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("1010\n1 01111101\n 1010 101 101    001 ") == Right(List(("1010", "PATTERN2"), ("\n", "NEWLINE"), ("1 0", "PATTERN1"), ("1111101", "PATTERN5"), ("\n", "NEWLINE"), (" ", "SPACE"), ("1010", "PATTERN2"), (" ", "SPACE"), ("101 101 ", "PATTERN4"), (" ", "SPACE"), (" ", "SPACE"), (" 001 ", "PATTERN3"))))
   }
 
-  test("Test lexer: abcd diverse char (10p)"){
+  test("Test lexer: abcd diverse char"){
     val spec =
       """SPACE: ' ';
         #DS: d+;
@@ -129,7 +129,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("aacd aacd c abcacddddaacd abccab c") == Right(List(("aacd", "APLUSCD"), (" ", "SPACE"), ("aacd", "APLUSCD"), (" ", "SPACE"), ("c", "ABCORC"), (" ", "SPACE"), ("abc", "ABCORC"), ("acd", "APLUSCD"), ("ddd", "DS"), ("aacd", "APLUSCD"), (" ", "SPACE"), ("abc", "ABCORC"), ("c", "ABCORC"), ("ab", "ABS"), (" ", "SPACE"), ("c", "ABCORC"))))
   }
 
-  test("Test lexer: everything complex char (15p)"){
+  test("Test lexer: everything complex char"){
     val spec =
       """SPACE: ' ';
         #NEWLINE: '\n';
@@ -152,7 +152,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("edbeedbdbdbeeeffdbeefdbdb aaabaadcadcdcbdcababababdc\nebbeaeeecacacaccacaccaaaa\nbcaaccaaccaaaacaccccaacac\n") == Right(List(("edbeedbdbdbeeeffdbeefdbdb", "PATTERN3"), (" ", "SPACE"), ("aaabaadcadcdcbdcababababdc", "PATTERN2"), ("\n", "NEWLINE"), ("ebbeaeeecacacaccacaccaaaa", "PATTERN1"), ("\n", "NEWLINE"), ("bcaaccaaccaaaacaccccaacac", "PATTERN1"), ("\n", "NEWLINE"))))
   }
 
-  test("Test lexer: simple error parsing char (5p)"){
+  test("Test lexer: simple error parsing char"){
     val spec =
       """NEWLINE: '\n';
         #ABC: a(b+)c;
@@ -170,7 +170,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("abbbc\nabc\n\n\nabbbbbc\nabbbbb") == Left("No viable alternative at character EOF, line 5"))
   }
 
-  test("Test lexer: simple error parsing char (10p)"){
+  test("Test lexer: simple error parsing char"){
     val spec =
       """SPACE: ' ';
         #ABC: a(b+)c;
@@ -187,7 +187,7 @@ class LexerTests extends munit.FunSuite{
     assert(Lexer(spec).lex("babbcbcbc abbbcaabc") == Left("No viable alternative at character 1, line 0"))
   }
 
-  test("Test lexer: lexer for a real language (20p)"){
+  test("Test lexer: lexer for a real language"){
     val source = io.Source.fromFile("src/main/scala/configuration")
     val spec = try source.mkString.stripMargin('#').replaceAll("\r\n", "\n") finally source.close()
 

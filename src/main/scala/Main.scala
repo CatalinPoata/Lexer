@@ -1,27 +1,5 @@
 object Main {
   def main(args: Array[String]): Unit = {
-    /*val spec =
-      """BEGIN: (((' ')|('\n'))*)begin(((' ')|('\n'))*);
-        ##END: (((' ')|('\n'))*)end(((' ')|('\n'))*);
-        ##EQUAL: (((' ')|('\n'))*)==(((' ')|('\n'))*);
-        ##ASSIGN: (((' ')|('\n'))*)=(((' ')|('\n'))*);
-        ##PLUS: (((' ')|('\n'))*)('+')(((' ')|('\n'))*);
-        ##MINUS: (((' ')|('\n'))*)('-')(((' ')|('\n'))*);
-        ##MULTIPLY: (((' ')|('\n'))*)('*')(((' ')|('\n'))*);
-        ##GREATER: (((' ')|('\n'))*)>=(((' ')|('\n'))*);
-        ##WHILE: (((' ')|('\n'))*)while(((' ')|('\n'))*);
-        ##DO: (((' ')|('\n'))*)do(((' ')|('\n'))*);
-        ##OD: (((' ')|('\n'))*)od(((' ')|('\n'))*);
-        ##IF: (((' ')|('\n'))*)if(((' ')|('\n'))*);
-        ##THEN: (((' ')|('\n'))*)then(((' ')|('\n'))*);
-        ##ELSE: (((' ')|('\n'))*)else(((' ')|('\n'))*);
-        ##FI: (((' ')|('\n'))*)fi(((' ')|('\n'))*);
-        ##RETURN: (((' ')|('\n'))*)return(((' ')|('\n'))*);
-        ##OPEN_PARANTHESIS: (((' ')|('\n'))*)('(')(((' ')|('\n'))*);
-        ##CLOSE_PARANTHESIS: (((' ')|('\n'))*)(')')((' ')|('\n'))* ;
-        ##NUMBER: NUMBER: (((' ')|('\n'))*)([0-9])+(((' ')|('\n'))*);
-        ##VARIABLE: VARIABLE: (((' ')|('\n'))*)([a-z]|[A-Z])(((' ')|('\n'))*);
-        #""".stripMargin('#')*/
 
     val source = io.Source.fromFile("src/main/scala/configuration")
     val spec = try source.mkString.stripMargin('#').replaceAll("\r\n", "\n") finally source.close()
@@ -50,11 +28,5 @@ object Main {
     println(results(5));
     println(results(6));
     println(results(7));
-    //assert(Lexer(spec).lex("begin\na = 1\nend") == List("BEGIN", "VARIABLE", "ASSIGN", "NUMBER", "END"))
-    /*assert(Lexer(spec).lex("a") == Right(List(("a", "A"))))
-    assert(Lexer(spec).lex("aa") == Right(List(("a", "A"), ("a", "A"))))
-    assert(Lexer(spec).lex("abca") == Right(List(("a", "A"), ("bc", "BC"), ("a", "A"))))
-    assert(Lexer(spec).lex("abcdefdefbca") == Right(List(("a", "A"), ("bc", "BC"), ("def", "DEF"), ("def", "DEF"), ("bc", "BC"), ("a", "A"))))*/
-
   }
 }

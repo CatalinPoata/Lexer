@@ -4,8 +4,7 @@ import scala.collection.mutable
 
 class Dfa[A] (var K: Set[A], var S: Set[Char], var D: Set[(A, Char, A)], var q0: A, var F: Set[A]){
 
-  // The following methods are only the methods directly called by the test suite. You can (and should) define more.
-  // TODO implement map
+  // State mapper from datatype A to datatype B
   def map[B](f: A => B) : Dfa[B] = {
     def convert(trans: (A, Char, A)): (B, Char, B) = return (f(trans._1), trans._2, f(trans._3));
     var newK = K.map(f);
@@ -17,13 +16,12 @@ class Dfa[A] (var K: Set[A], var S: Set[Char], var D: Set[(A, Char, A)], var q0:
     return new Dfa[B](newK, newS, newD, newq0, newF);
   }
 
-  // TODO implement next
+  // Function that returns the next state
   def next(state:A, c: Char): A = {
     return K.filter(st => D.contains((state, c, st))).head;
   }
 
-  // TODO implement accepts
-  //Accept recursive helper function
+  // Acccepts function helper that goes through the states recursively
   def acceptsHelper(str: String, state: A): Boolean = {
     //Empty word
     if (str.length == 0) {
@@ -38,17 +36,19 @@ class Dfa[A] (var K: Set[A], var S: Set[Char], var D: Set[(A, Char, A)], var q0:
 
     return false;
   }
+
+  // Function that checks whether our DFA accepts a word or not
   def accepts(str: String): Boolean = {
     var currState = q0;
     return acceptsHelper(str, q0);
   }
 
-  // TODO implement getStates
+  // Getter for the list of states
   def getStates : Set[A] = {
     return K;
   }
 
-  // TODO implement isFinal
+  // Function that checks if a state is final
   def isFinal(state: A): Boolean = {
     return F.contains(state);
   }
@@ -59,12 +59,11 @@ class Dfa[A] (var K: Set[A], var S: Set[Char], var D: Set[(A, Char, A)], var q0:
 }
 
 // This is a companion object to the Dfa class. This allows us to call the method fromPrenex without instantiating the Dfa class beforehand.
-// You can think of the methods of this object like static methods of the Dfa class
 object Dfa {
   var numberOfStates = 0;
   var stateEquiv: mutable.HashMap[Int, Set[Int]] = mutable.HashMap.empty[Int, Set[Int]];
 
-  // TODO implement Prenex -> Dfa transformation. hint: you should make use of Nfa.fromPrenex to build the Dfa
+  // Function that evaluates the text recursively
   def fromPrenex(str: String): Dfa[Int] = {
     this.numberOfStates = 0;
     this.stateEquiv = mutable.HashMap.empty;
@@ -175,6 +174,4 @@ object Dfa {
 
     return dfa;
   }
-
-  // You can add more methods to this object
 }

@@ -2,12 +2,8 @@ import scala.collection.mutable
 import scala.collection.mutable.Stack
 
 object Regex {
-  /*
-    This function should:
-    -> Classify input as either character(or string) or operator
-    -> Convert special inputs like [0-9] to their correct form
-    -> Convert escaped characters
-  */
+
+  // Function that preprocesses a regex
   def preprocess(s:List[Char]): List[Either[Char,Char]] = {
     var prepList = List.empty[Either[Char, Char]];
     if(s.length == 3 && s(0) == 'e' && s(1) == 'p' && s(2) == 's'){
@@ -112,6 +108,7 @@ object Regex {
     return addConcats(interList2);
   }
 
+  // Function that processes syntactic sugars
   def changeSyntacticSugars(s: List[Either[Char, Char]]): List[Either[Char, Char]] = {
     var iter = 0;
     var fs = List.empty[Either[Char, Char]];
@@ -140,6 +137,7 @@ object Regex {
     return fs;
   }
 
+  // Function that processes the + and ? operators
   def changeNewOps(s: List[Either[Char, Char]]): List[Either[Char, Char]] = {
     var iter = 0;
     var fs = List.empty[Either[Char, Char]];
@@ -215,6 +213,7 @@ object Regex {
     return fs;
   }
 
+  // Function that concatenates the groups of operands and adjacent characters
   def addConcats(s: List[Either[Char, Char]]): List[Either[Char, Char]] = {
     var fs = List.empty[Either[Char, Char]];
     if(s.length == 0){
@@ -256,6 +255,7 @@ object Regex {
     return fs;
   }
 
+  // Function that turns the text from the infix form to the prefix form
   def infixToPrefix(s: List[Either[Char, Char]]): String = {
     var prefix = "";
     var revInfix = s.reverse;
@@ -336,7 +336,7 @@ object Regex {
   }
 
 
-  // This function should construct a prenex expression out of a normal one.
+  // This function constructs a prenex expression out of a normal one.
   def toPrenex(str: String): String = {
     var infix = preprocess(str.toList);
     infixToPrefix(infix);

@@ -6,5 +6,5 @@ libraryDependencies += "org.scalameta" %% "munit" % "0.7.26" % Test
 
 lazy val root = (project in file("."))
   .settings(
-    name := "LFA-2022-2023"
+    name := "Lexer"
   )
